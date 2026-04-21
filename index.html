@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoring Kinerja Kopkar Adaro Karya Mandiri</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Pustaka PDF Generator -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<style>
+  :root {
+    --green-50: #f0fdf4; --green-100: #dcfce7; --green-200: #bbf7d0;
+    --green-400: #4ade80; --green-500: #22c55e; --green-600: #16a34a;
+    --green-700: #15803d; --green-800: #166534; --green-900: #14532d;
+    --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0;
+    --slate-300: #cbd5e1; --slate-400: #94a3b8; --slate-500: #64748b;
+    --slate-600: #475569; --slate-700: #334155; --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --blue-50: #eff6ff; --blue-100: #dbeafe; --blue-500: #3b82f6;
+    --blue-600: #2563eb; --blue-700: #1d4ed8; --blue-800: #1e40af;
+    --amber-50: #fffbeb; --amber-100: #fef3c7; --amber-400: #fbbf24;
+    --amber-500: #f59e0b; --amber-600: #d97706; --amber-700: #b45309;
+    --red-50: #fef2f2; --red-100: #fee2e2; --red-400: #f87171;
+    --red-500: #ef4444; --red-600: #dc2626; --red-700: #b91c1c;
+    --purple-50: #faf5ff; --purple-100: #f3e8ff; --purple-500: #a855f7;
+    --purple-700: #7e22ce;
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 20px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
+    --transition: 0.18s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: var(--font-main);
+    background: var(--slate-50);
+    color: var(--slate-800);
+    min-height: 100vh;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .topbar {
+    background: white;
+    border-bottom: 1px solid var(--slate-200);
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    gap: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .topbar-logo {
+    height: 38px;
+    width: auto;
+    border-radius: var(--radius-sm);
+  }
+  .topbar-title { font-size: 16px; font-weight: 800; color: var(--slate-800); letter-spacing: -0.2px; }
+  .topbar-sub { font-size: 12px; color: var(--slate-500); font-weight: 600; }
+
+  .topbar-right {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+
+  .ctrl-select {
+    appearance: none;
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-md);
+    padding: 7px 32px 7px 12px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--slate-700);
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    box-shadow: var(--shadow-sm);
+  }
+  .ctrl-select:focus { outline: none; border-color: var(--green-500); box-shadow: 0 0 0 3px rgba(34,197,94,0.12); }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    font-family: var(--font-main);
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: all var(--transition);
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-primary { background: var(--green-600); color: white; }
+  .btn-primary:hover { background: var(--green-700); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-secondary { background: white; color: var(--slate-700); border: 1px solid var(--slate-200); }
+  .btn-secondary:hover { background: var(--slate-50); }
+  .btn-danger { background: white; color: #dc2626; border: 1px solid #fecaca; }
+  .btn-danger:hover { background: #fef2f2; border-color: #fca5a5; }
+
+  .sync-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 99px;
+    background: var(--slate-100);
+    color: var(--slate-600);
+    border: 1px solid var(--slate-200);
+    white-space: nowrap;
+  }
+  .sync-badge.success { background: var(--green-50); color: var(--green-700); border-color: var(--green-200); }
+  .sync-badge.error { background: var(--amber-50); color: var(--amber-700); border-color: var(--amber-200); }
+  .sync-badge.saving { background: var(--blue-50); color: var(--blue-700); border-color: var(--blue-200); }
+
+  .page { max-width: 1280px; margin: 0 auto; padding: 28px 24px; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .summary-card {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 14px;
+    transition: box-shadow var(--transition), transform var(--transition);
+  }
+  .summary-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .summary-icon {
+    width: 46px; height: 46px; border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .summary-label { font-size: 11px; font-weight: 700; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .summary-value { font-size: 26px; font-weight: 800; color: var(--slate-800); line-height: 1; }
+  .summary-sub { font-size: 12px; font-weight: 600; color: var(--slate-400); margin-top: 2px; }
+
+  .overall-progress {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .progress-title { font-size: 13px; font-weight: 700; color: var(--slate-700); }
+  .progress-track {
+    height: 10px; background: var(--slate-100); border-radius: 99px; overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--green-500), var(--green-400));
+    transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  .progress-fill::after {
+    content: ''; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--green-500); border: 2px solid white;
+    box-shadow: var(--shadow-sm);
+  }
+  .segment-labels { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+  .seg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .seg-item { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--slate-500); }
+  .seg-count { font-weight: 700; color: var(--slate-700); }
+
+  .manager-grid { display: flex; flex-direction: column; gap: 20px; }
+  .manager-card {
+    background: white;
+    border: 1px solid var(--slate-200);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition);
+  }
+  .manager-card:hover { box-shadow: var(--shadow-md); }
+
+  .manager-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--slate-100);
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .manager-identity { display: flex; align-items: center; gap: 13px; }
+  .manager-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .manager-name { font-size: 16px; font-weight: 800; color: var(--slate-800); }
+  .manager-role { font-size: 12px; font-weight: 600; color: var(--slate-500); margin-top: 1px; }
+
+  .manager-stats { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  
+  .stat-pill {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--slate-50);
+    border: 1px solid var(--slate-200);
+    border-radius: 99px;
+    padding: 5px 12px;
+    font-size: 12px; font-weight: 700;
+  }
+  .stat-pill.good { background: var(--green-50); border-color: var(--green-200); color: var(--green-700); }
+  .stat-pill.warn { background: var(--amber-50); border-color: var(--amber-200); color: var(--amber-700); }
+  .stat-pill.bad { background: var(--red-50); border-color: var(--red-200); color: var(--red-700); }
+  .stat-pill.neutral { color: var(--slate-600); }
+
+  .mini-progress { display: flex; align-items: center; gap: 8px; }
+  .mini-track { width: 80px; height: 6px; background: var(--slate-200); border-radius: 99px; overflow: hidden; }
+  .mini-fill { height: 100%; background: var(--green-500); border-radius: 99px; transition: width 0.5s ease; }
+  .mini-label { font-size: 12px; font-weight: 700; color: var(--slate-600); }
+
+  .manager-score-wrap {
+    display: flex; align-items: center; gap: 12px;
+    border-left: 1px solid var(--slate-200); padding-left: 16px; margin-left: auto;
+  }
+  .manager-score-details { text-align: right; }
+  .manager-score-label { font-size: 10px; font-weight: 800; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.5px; }
+  .manager-score-sub { font-size: 10px; color: var(--slate-500); font-weight: 600; margin-top: 2px; }
+  .manager-score-badge {
+    background: linear-gradient(135deg, var(--blue-600), var(--blue-500));
+    color: white; padding: 6px 12px; border-radius: 10px;
+    font-weight: 800; font-size: 20px; box-shadow: var(--shadow-sm);
+    min-width: 64px; text-align: center;
+  }
+
+  .goals-container { overflow-x: auto; }
+  
+  table.goals-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  table.goals-table thead tr { background: var(--slate-50); border-bottom: 1px solid var(--slate-200); }
+  table.goals-table thead th {
+    padding: 11px 18px; font-size: 11px; font-weight: 700; color: var(--slate-500);
+    text-transform: uppercase; letter-spacing: 0.06em; text-align: left;
+  }
+  table.goals-table tbody tr { border-bottom: 1px solid var(--slate-100); transition: background var(--transition); }
+  table.goals-table tbody tr:hover { background: var(--slate-50); }
+  table.goals-table tbody tr:last-child { border-bottom: none; }
+  table.goals-table tbody tr.row-achieved { background: rgba(34,197,94,0.03); }
+  table.goals-table tbody tr.row-achieved:hover { background: rgba(34,197,94,0.06); }
+  table.goals-table tbody tr.row-missed { background: rgba(239,68,68,0.03); }
+  table.goals-table tbody tr.row-missed:hover { background: rgba(239,68,68,0.06); }
+  table.goals-table td { padding: 14px 18px; vertical-align: top; }
+
+  .type-badge {
+    display: inline-block; padding: 2px 8px;
+    border-radius: var(--radius-sm); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+  }
+  .type-pendapatan { background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-100); }
+  .type-penghematan { background: var(--purple-50); color: var(--purple-700); border: 1px solid var(--purple-100); }
+  .type-operasional { background: var(--slate-100); color: var(--slate-600); border: 1px solid var(--slate-200); }
+
+  .goal-desc { font-size: 13px; color: var(--slate-700); font-weight: 500; line-height: 1.5; }
+
+  .target-label { font-size: 10px; font-weight: 700; color: var(--slate-400); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+  .target-val { font-size: 13px; font-weight: 700; color: var(--slate-800); font-family: var(--font-mono); margin-bottom: 10px; }
+  .actual-label { font-size: 10px; font-weight: 700; color: var(--blue-600); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+  
+  .input-rp { position: relative; display: flex; align-items: center; }
+  .input-rp-prefix {
+    position: absolute; left: 10px;
+    font-size: 12px; font-weight: 600; color: var(--slate-400);
+    pointer-events: none; font-family: var(--font-mono);
+  }
+  .input-rp input {
+    width: 100%; padding: 7px 10px 7px 32px;
+    border: 1.5px solid var(--slate-200); border-radius: var(--radius-md);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+    color: var(--slate-800); background: white;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    outline: none;
+  }
+  .input-rp input:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+  .input-rp input::placeholder { color: var(--slate-300); font-weight: 400; }
+
+  .actual-value { font-size: 14px; font-weight: 700; color: var(--blue-700); font-family: var(--font-mono); }
+  .actual-empty { font-size: 12px; color: var(--slate-400); font-style: italic; }
+
+  .status-select-wrap { position: relative; }
+  .status-select {
+    appearance: none; width: 100%; padding: 7px 28px 7px 10px;
+    border: 1.5px solid var(--slate-200); border-radius: var(--radius-md);
+    font-family: var(--font-main); font-size: 12px; font-weight: 700;
+    cursor: pointer; outline: none; background: white; color: var(--slate-600);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' fill='none'%3E%3Cpath d='M1 1.5l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center;
+  }
+  .status-select.achieved { border-color: var(--green-400); background-color: var(--green-50); color: var(--green-700); }
+  .status-select.missed { border-color: var(--red-400); background-color: var(--red-50); color: var(--red-700); }
+  .status-select:focus { box-shadow: 0 0 0 3px rgba(34,197,94,0.12); }
+
+  .pica-area {
+    width: 100%; padding: 9px 12px;
+    border: 1.5px solid var(--slate-200); border-radius: var(--radius-md);
+    font-family: var(--font-main); font-size: 12.5px; color: var(--slate-700);
+    resize: vertical; min-height: 76px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    background: white; outline: none; line-height: 1.5;
+  }
+  .pica-area:focus { border-color: var(--red-400); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+  .pica-area:disabled { background: var(--slate-50); color: var(--slate-400); cursor: not-allowed; border-color: var(--slate-100); }
+  .pica-area.active { border-color: var(--red-300); background: var(--red-50); }
+
+  .col-goal { width: 32%; }
+  .col-data { width: 22%; }
+  .col-status { width: 14%; }
+  .col-pica { width: 32%; }
+
+  .avatar-0 { background: linear-gradient(135deg, #16a34a, #4ade80); }
+  .avatar-1 { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+  .avatar-2 { background: linear-gradient(135deg, #9333ea, #c084fc); }
+  .avatar-3 { background: linear-gradient(135deg, #db2777, #f472b6); }
+  .avatar-4 { background: linear-gradient(135deg, #d97706, #fbbf24); }
+  .avatar-5 { background: linear-gradient(135deg, #0891b2, #22d3ee); }
+
+  .spin { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 640px) {
+    .topbar { padding: 0 14px; height: auto; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
+    .topbar-right { width: 100%; }
+    .page { padding: 16px 14px; }
+    .summary-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .summary-card { padding: 14px; }
+    .summary-value { font-size: 22px; }
+    .manager-header { flex-direction: column; align-items: flex-start; }
+    .manager-stats { gap: 8px; }
+    .manager-score-wrap { border-left: none; padding-left: 0; margin-left: 0; width: 100%; justify-content: space-between; border-top: 1px solid var(--slate-100); padding-top: 12px; margin-top: 8px; }
+    .manager-score-details { text-align: left; }
+    table.goals-table { min-width: 600px; }
+    table.goals-table td { padding: 10px 12px; }
+    .topbar-title { font-size: 13px; }
+  }
+
+  @media print {
+    .topbar, .no-print { display: none !important; }
+    body { background: white; }
+    .manager-card { box-shadow: none !important; border: 1px solid #e2e8f0 !important; page-break-inside: avoid; margin-bottom: 20px; }
+    .pica-area { border: 1px solid #ddd !important; background: white !important; }
+    .status-select { border: 1px solid #ddd !important; background: white !important; }
+    .input-rp input { border: 1px solid #ddd !important; background: white !important; }
+    .overall-progress { page-break-inside: avoid; }
+    .manager-grid { gap: 10px; }
+  }
+
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: var(--slate-800); color: white;
+    font-size: 11px; font-weight: 500; white-space: nowrap;
+    padding: 4px 8px; border-radius: var(--radius-sm);
+    opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    z-index: 200;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+
+  .filter-tabs {
+    display: flex; gap: 4px; background: var(--slate-100);
+    border-radius: var(--radius-md); padding: 3px; margin-bottom: 20px;
+    width: fit-content; max-width: 100%; overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .filter-tab {
+    padding: 5px 12px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    border: none; background: none; color: var(--slate-500);
+    transition: all var(--transition); white-space: nowrap;
+  }
+  .filter-tab.active { background: white; color: var(--slate-800); box-shadow: var(--shadow-sm); }
+
+  .top-bar-wrap {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .period-label {
+    font-size: 13px; font-weight: 600; color: var(--slate-500);
+  }
+  .period-label strong { color: var(--slate-800); font-weight: 800; }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="topbar-brand">
+    <!-- Mengganti Logo Inisial dengan Logo Resmi -->
+    <img src="https://i.ibb.co.com/WvTwLMn5/image-1.png" alt="Logo Kopkar AKM" class="topbar-logo">
+    <div>
+      <div class="topbar-title">Monitoring Kinerja</div>
+      <div class="topbar-sub">Kopkar Adaro Karya Mandiri 2026</div>
+    </div>
+  </div>
+  <div class="topbar-right no-print">
+    <span id="sync-status" class="sync-badge">
+      <i class="fa-solid fa-spinner spin" style="font-size:11px;"></i> Memuat data cloud
+    </span>
+    <select id="month-filter" class="ctrl-select" onchange="switchMonth(this.value)">
+      <option value="all">Sepanjang 2026</option>
+      <option value="0">Januari</option><option value="1">Februari</option>
+      <option value="2">Maret</option><option value="3">April</option>
+      <option value="4">Mei</option><option value="5">Juni</option>
+      <option value="6">Juli</option><option value="7">Agustus</option>
+      <option value="8">September</option><option value="9">Oktober</option>
+      <option value="10">November</option><option value="11">Desember</option>
+    </select>
+    <button class="btn btn-secondary" onclick="exportCSV()">
+      <i class="fa-solid fa-file-csv text-slate-500"></i> Ekspor CSV
+    </button>
+    <button class="btn btn-primary" onclick="window.print()">
+      <i class="fa-solid fa-print"></i> Cetak Semua
+    </button>
+  </div>
+</nav>
+
+<main class="page">
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-icon" style="background:var(--blue-50);color:var(--blue-600);">
+        <i class="fa-solid fa-bullseye"></i>
+      </div>
+      <div>
+        <div class="summary-label">Total Target</div>
+        <div class="summary-value" id="total-targets">0</div>
+        <div class="summary-sub">item dievaluasi</div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon" style="background:var(--green-50);color:var(--green-600);">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div>
+        <div class="summary-label">Tercapai</div>
+        <div class="summary-value" id="achieved-count">0</div>
+        <div class="summary-sub" id="achievement-rate">dari total target</div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon" style="background:var(--red-50);color:var(--red-600);">
+        <i class="fa-solid fa-circle-xmark"></i>
+      </div>
+      <div>
+        <div class="summary-label">Perlu PICA</div>
+        <div class="summary-value" id="missed-count">0</div>
+        <div class="summary-sub">target meleset</div>
+      </div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-icon" style="background:var(--purple-50);color:var(--purple-700);">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+      <div>
+        <div class="summary-label">Rata-rata Hadir</div>
+        <div class="summary-value" id="avg-attendance">0</div>
+        <div class="summary-sub">hari/pengelola</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overall-progress no-print">
+    <div class="progress-header">
+      <span class="progress-title">Progress Pencapaian Tim</span>
+      <span id="progress-pct" style="font-size:13px;font-weight:800;color:var(--green-700);">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="segment-labels">
+      <div class="seg-item"><div class="seg-dot" style="background:var(--green-500);margin-top:5px;"></div><span><span class="seg-count" id="lbl-tercapai">0</span> Tercapai</span></div>
+      <div class="seg-item"><div class="seg-dot" style="background:var(--red-400);margin-top:5px;"></div><span><span class="seg-count" id="lbl-meleset">0</span> Meleset</span></div>
+      <div class="seg-item"><div class="seg-dot" style="background:var(--slate-300);margin-top:5px;"></div><span><span class="seg-count" id="lbl-pending">0</span> Belum dinilai</span></div>
+    </div>
+  </div>
+
+  <div class="top-bar-wrap no-print">
+    <div class="filter-tabs" id="type-filters">
+      <button class="filter-tab active" onclick="filterType('all', this)">Semua</button>
+      <button class="filter-tab" onclick="filterType('Pendapatan', this)">Pendapatan</button>
+      <button class="filter-tab" onclick="filterType('Penghematan', this)">Penghematan</button>
+      <button class="filter-tab" onclick="filterType('Operasional', this)">Operasional</button>
+    </div>
+    <div class="period-label" id="period-desc">Periode: <strong>Sepanjang 2026</strong></div>
+  </div>
+
+  <div class="manager-grid" id="manager-container"></div>
+
+  <div style="margin-top:48px; display:none;" id="print-sig" class="print:block">
+    <div style="display:flex;justify-content:space-between;padding:0 40px;">
+      <div style="text-align:center;">
+        <p style="margin-bottom:60px;font-size:13px;">Disiapkan Oleh</p>
+        <p style="font-weight:700;text-decoration:underline;">Fedrik</p>
+        <p style="font-size:13px;color:var(--slate-500);">Manager Koperasi</p>
+      </div>
+      <div style="text-align:center;">
+        <p style="margin-bottom:60px;font-size:13px;">Mengetahui</p>
+        <p style="font-weight:700;text-decoration:underline;min-width:200px;">____________________</p>
+        <p style="font-size:13px;color:var(--slate-500);">Pengurus Koperasi</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const BACKEND_DB_URL = "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT";
+const ABSENSI_GAS_URL = "https://script.google.com/macros/s/AKfycbxKDDzidmpfR-1Q-Ymiq8hfTo5l1vheH4w2NUktZEmBCfbF7AtLZr3IhEZPoF29hHoC3A/exec";
+
+// Menyimpan Cache Gambar Logo (agar PDF Generation Lulus Uji CORS)
+let logoBase64Cache = null;
+
+function formatRp(val) {
+  if(val === null || val === undefined) return '-';
+  if(val >= 1e9) return 'Rp ' + (val/1e9).toFixed(2) + ' Miliar';
+  if(val >= 1e6) return 'Rp ' + (val/1e6).toFixed(1) + ' Juta';
+  if(val >= 1e3) return 'Rp ' + Math.round(val/1e3) + ' Ribu';
+  return 'Rp ' + val;
+}
+
+window.formatRupiahInput = function(el) {
+  let v = el.value.replace(/[^0-9]/g,'');
+  el.value = v !== '' ? parseInt(v).toLocaleString('id-ID') : '';
+};
+
+const HOLIDAYS_2026 = [
+  '2026-01-01', '2026-02-12', '2026-02-17', '2026-03-19', '2026-03-20', '2026-03-21', 
+  '2026-04-03', '2026-05-01', '2026-05-14', '2026-05-26', '2026-06-01', '2026-08-17', 
+  '2026-09-04', '2026-12-25'
+];
+
+function getWorkingDaysInMonth(year, month) {
+  let count = 0;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const dayOfWeek = date.getDay();
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      const mStr = String(month + 1).padStart(2, '0');
+      const dStr = String(d).padStart(2, '0');
+      if (!HOLIDAYS_2026.includes(`${year}-${mStr}-${dStr}`)) count++;
+    }
+  }
+  return count;
+}
+
+function getWorkingDays(year, periodStr) {
+  if (periodStr === 'all') {
+    let total = 0;
+    for (let i = 0; i < 12; i++) total += getWorkingDaysInMonth(year, i);
+    return total;
+  }
+  return getWorkingDaysInMonth(year, parseInt(periodStr));
+}
+
+const AVATAR_COLORS = ['avatar-0','avatar-1','avatar-2','avatar-3','avatar-4','avatar-5'];
+const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+let managers = [
+  { id:"Fedrik", name:"Fedrik", role:"Manager Koperasi", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"f1",type:"Pendapatan",target:"Target Tahunan: Rp 2.6 Miliar",desc:"Kejar total pendapatan usaha dari penggabungan seluruh unit bisnis.",limitBulanan:216666666,operator:'>='},
+      {id:"f2",type:"Pendapatan",target:"Target Tahunan: Rp 100 Juta",desc:"Hasilkan pendapatan sewa gedung Kopkarindo 92 Juta dan Guest House 8 Juta.",limitBulanan:8333333,operator:'>='},
+      {id:"f3",type:"Penghematan",target:"Maksimal Rp 9 Juta/Bulan",desc:"Kendalikan beban operasional rata-rata bulanan untuk mencegah pemborosan.",limitBulanan:9000000,operator:'<='},
+      {id:"f4",type:"Penghematan",target:"Nol Rupiah (Rp 0)",desc:"Ganti perjalanan dinas fisik dengan pertemuan daring untuk menekan beban.",limitBulanan:0,operator:'<='},
+      {id:"f5",type:"Operasional",target:"Setiap Hari",desc:"Terapkan sistem pelaporan keuangan harian terpusat untuk memantau arus kas."}
+    ]
+  },
+  { id:"Mahmuda", name:"Mahmudah Hayati", role:"Kabag Administrasi", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"m1",type:"Pendapatan",target:"Target Tahunan: Rp 259 Juta",desc:"Bukukan penjualan minimarket Adamart di seluruh site.",limitBulanan:21583333,operator:'>='},
+      {id:"m2",type:"Pendapatan",target:"Target Tahunan: Rp 60 Juta",desc:"Hasilkan pendapatan dari barang titipan minimarket.",limitBulanan:5000000,operator:'>='},
+      {id:"m3",type:"Pendapatan",target:"Target Tahunan: Rp 63 Juta",desc:"Distribusikan voucher anggota dan kejar target pendapatan.",limitBulanan:5250000,operator:'>='},
+      {id:"m4",type:"Penghematan",target:"Maksimal Rp 500 Ribu/Bulan",desc:"Tekan kerugian barang kedaluwarsa Adamart.",limitBulanan:500000,operator:'<='},
+      {id:"m5",type:"Penghematan",target:"Maksimal Rp 636 Ribu/Bulan",desc:"Kembalikan tagihan listrik toko ke angka wajar.",limitBulanan:636881,operator:'<='},
+      {id:"m6",type:"Operasional",target:"Rutin Mingguan",desc:"Lakukan penataan ulang rak barang berdasarkan produk paling laris."}
+    ]
+  },
+  { id:"Sri", name:"Sri Mulyani", role:"Keuangan", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"s1",type:"Pendapatan",target:"Target Tahunan: Rp 1.41 Miliar",desc:"Capai target pendapatan Unit Simpan Pinjam.",limitBulanan:117500000,operator:'>='},
+      {id:"s2",type:"Pendapatan",target:"Target Tahunan: Rp 167 Juta",desc:"Hasilkan pendapatan pinjaman konsumtif anggota.",limitBulanan:13916666,operator:'>='},
+      {id:"s3",type:"Pendapatan",target:"Target Tahunan: Rp 67 Juta",desc:"Bukukan pendapatan pinjaman eksternal (SIS 60 Juta, BUMA 7 Juta).",limitBulanan:5583333,operator:'>='},
+      {id:"s4",type:"Operasional",target:"Tanpa Penundaan",desc:"Terima verifikasi dan salurkan pinjaman modal usaha dan konsumtif anggota."},
+      {id:"s5",type:"Operasional",target:"100% Digital",desc:"Terapkan sistem persetujuan pinjaman digital agar layanan berjalan cepat."}
+    ]
+  },
+  { id:"Zahrah", name:"Zahrah Annisa", role:"Pembiayaan Wisata", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"z1",type:"Pendapatan",target:"Target Tahunan: Rp 95 Juta",desc:"Hasilkan pendapatan tiket pesawat anggota.",limitBulanan:7916666,operator:'>='},
+      {id:"z2",type:"Pendapatan",target:"Target Tahunan: Rp 90 Juta",desc:"Bukukan pendapatan dari selisih penjualan tiket.",limitBulanan:7500000,operator:'>='},
+      {id:"z3",type:"Pendapatan",target:"Target Tahunan: Rp 2.5 Juta",desc:"Hasilkan pendapatan dari selisih penjualan hotel.",limitBulanan:208333,operator:'>='},
+      {id:"z4",type:"Operasional",target:"Maksimal 30 Menit",desc:"Proses pembiayaan perjalanan wisata umrah dan tiket pesawat anggota."},
+      {id:"z5",type:"Operasional",target:"Bulan Desember",desc:"Buat daftar paket wisata liburan akhir tahun khusus anggota Adaro."}
+    ]
+  },
+  { id:"Rika", name:"Rika Norhidayah", role:"Administrasi", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"r1",type:"Operasional",target:"Nol (0) Denda Bank",desc:"Kelola pencairan dana secara akurat tanpa denda keterlambatan."},
+      {id:"r2",type:"Operasional",target:"Maksimal 1 Jam",desc:"Serahkan bukti transaksi bank ke bagian keuangan maksimal satu jam."},
+      {id:"r3",type:"Penghematan",target:"Maksimal Rp 300 Ribu/Bulan",desc:"Tahan belanja alat tulis kantor (ATK).",limitBulanan:300000,operator:'<='},
+      {id:"r4",type:"Penghematan",target:"Nol Rupiah (Rp 0)",desc:"Tolak pembelian perlengkapan yang tidak menghasilkan uang langsung.",limitBulanan:0,operator:'<='},
+      {id:"r5",type:"Operasional",target:"Satu Kali Jalan",desc:"Kumpulkan jadwal pencairan bank untuk menghemat waktu transportasi."}
+    ]
+  },
+  { id:"Ernest", name:"Ernest Kalula", role:"Operasional", attendance:0, attendanceMap:{}, _trackedDates: {},
+    goals:[
+      {id:"e1",type:"Penghematan",target:"Maksimal Rp 1.8 Juta/Bulan",desc:"Jaga pemakaian bahan bakar armada operasional.",limitBulanan:1800000,operator:'<='},
+      {id:"e2",type:"Penghematan",target:"Nol (0) Kerusakan Berat",desc:"Lakukan pengecekan rutin kendaraan untuk menghindari turun mesin.",limitBulanan:0,operator:'<='},
+      {id:"e3",type:"Operasional",target:"Sesuai Jadwal",desc:"Laksanakan layanan antar jemput karyawan sesuai rute dan jadwal."},
+      {id:"e4",type:"Operasional",target:"Rute Tercepat",desc:"Petakan rute alternatif harian untuk menghindari kemacetan."}
+    ]
+  }
+];
+
+let currentPeriod = 'all';
+let achievementData = {};
+let activeTypeFilter = 'all';
+
+function resetAttendanceMaps() {
+  managers.forEach(m => {
+    if(!m.attendanceMap) m.attendanceMap = { all: 0 };
+    for (let i = 0; i < 12; i++) m.attendanceMap[i] = 0;
+    if(!m._trackedDates) m._trackedDates = { all: new Set() };
+    for (let i = 0; i < 12; i++) m._trackedDates[i] = new Set();
+  });
+}
+
+async function fetchCloudData() {
+  if(BACKEND_DB_URL === "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT") {
+    loadLocalStorageData();
+    renderDashboard();
+    updateSummary();
+    return;
+  }
+
+  const el = document.getElementById('sync-status');
+  try {
+    const res = await fetch(BACKEND_DB_URL);
+    if(!res.ok) throw new Error('DB Fetch error');
+    
+    const json = await res.json();
+    if(json.status === 'success') {
+      if(json.targets && json.targets.length > 0) {
+        const managersMap = {};
+        json.targets.forEach(t => {
+          if(!managersMap[t.pengelolaId]) {
+            managersMap[t.pengelolaId] = {
+              id: t.pengelolaId, name: t.nama, role: "Pengelola Koperasi",
+              attendance: 0, attendanceMap: {all:0}, _trackedDates: {all: new Set()}, goals: []
+            };
+            for (let i = 0; i < 12; i++) { managersMap[t.pengelolaId].attendanceMap[i] = 0; managersMap[t.pengelolaId]._trackedDates[i] = new Set(); }
+          }
+          managersMap[t.pengelolaId].goals.push({
+            id: t.goalId, type: t.type, target: t.targetTeks, desc: t.desc,
+            limitBulanan: t.limit, operator: t.operator
+          });
+        });
+        managers = Object.values(managersMap);
+      }
+      
+      achievementData = json.achievementData || {};
+      if(!achievementData['all']) achievementData['all'] = {};
+      for(let i=0; i<12; i++) { if(!achievementData[i]) achievementData[i] = {}; }
+
+      el.className = 'sync-badge success';
+      el.innerHTML = '<i class="fa-solid fa-cloud-arrow-down" style="font-size:10px;"></i> Data Cloud Terhubung';
+      setTimeout(() => el.style.display = 'none', 3500);
+    }
+  } catch (err) {
+    console.error("Gagal load DB", err);
+    loadLocalStorageData(); 
+  }
+  
+  renderDashboard();
+  updateSummary();
+}
+
+function loadLocalStorageData() {
+  const d = localStorage.getItem('kopkar_pica_monthly');
+  if(d) achievementData = JSON.parse(d);
+  if(!achievementData['all']) achievementData['all'] = {};
+  for(let i=0; i<12; i++) if(!achievementData[i]) achievementData[i] = {};
+}
+
+async function saveToCloud(payloadData) {
+  const el = document.getElementById('sync-status');
+  el.style.display = 'inline-flex';
+  el.className = 'sync-badge saving';
+  el.innerHTML = '<i class="fa-solid fa-spinner spin" style="font-size:10px;"></i> Menyimpan...';
+  
+  if(BACKEND_DB_URL === "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT") {
+    localStorage.setItem('kopkar_pica_monthly', JSON.stringify(achievementData));
+    el.className = 'sync-badge success';
+    el.innerHTML = '<i class="fa-solid fa-check" style="font-size:10px;"></i> Tersimpan Lokal';
+    setTimeout(() => el.style.display = 'none', 2000);
+    return;
+  }
+
+  try {
+    const res = await fetch(BACKEND_DB_URL, {
+      method: 'POST',
+      body: JSON.stringify(payloadData),
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+    });
+    const json = await res.json();
+    if(json.status === 'success') {
+      localStorage.setItem('kopkar_pica_monthly', JSON.stringify(achievementData)); 
+      el.className = 'sync-badge success';
+      el.innerHTML = '<i class="fa-solid fa-check" style="font-size:10px;"></i> Tersimpan di Cloud';
+    } else throw new Error(json.message);
+  } catch(e) {
+    el.className = 'sync-badge error';
+    el.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:10px;"></i> Gagal Simpan Cloud';
+  }
+  setTimeout(() => el.style.display = 'none', 3000);
+}
+
+async function fetchAttendanceData() {
+  try {
+    const res = await fetch(ABSENSI_GAS_URL);
+    if(!res.ok) throw new Error('Fetch error');
+    const json = await res.json();
+    
+    let rows = [];
+    if (Array.isArray(json)) rows = json;
+    else if (json && Array.isArray(json['Presensi Masuk'])) rows = json['Presensi Masuk'];
+    else if (json && Array.isArray(json['Array Absen Masuk'])) rows = json['Array Absen Masuk'];
+    else if (json && Array.isArray(json.masuk)) rows = json.masuk;
+    else if (json && Array.isArray(json.data)) rows = json.data;
+
+    if (rows.length > 0) {
+      const isArrayFormat = Array.isArray(rows[0]);
+      let headers = isArrayFormat ? rows[0].map(h => String(h).toLowerCase().trim()) : [];
+      const startIdx = isArrayFormat ? 1 : 0;
+      
+      for (let i = startIdx; i < rows.length; i++) {
+        const row = rows[i];
+        if (i === 0 && Array.isArray(row) && String(row[5]).toLowerCase() === 'nama') continue; 
+        
+        let dateVal, empName, statusVal, icoVal;
+        if (isArrayFormat) {
+            let dateIdx = headers.indexOf('tanggal'); if(dateIdx === -1) dateIdx = 2;
+            let nameIdx = headers.findIndex(h => h.includes('nama')); if(nameIdx === -1) nameIdx = 5;
+            let statusIdx = headers.indexOf('status'); if(statusIdx === -1) statusIdx = 6;
+            let icoIdx = headers.indexOf('ico'); if(icoIdx === -1) icoIdx = 14;
+
+            dateVal = row[dateIdx]; empName = row[nameIdx];
+            statusVal = statusIdx !== -1 ? row[statusIdx] : '';
+            icoVal = icoIdx !== -1 ? row[icoIdx] : '';
+        } else {
+            dateVal = row.Tanggal || row.tanggal || row.Date || row.date;
+            empName = row.Nama || row.nama || row.Name || row.name;
+            statusVal = row.Status || row.status;
+            icoVal = row.ico || row.Ico || row.Con || row.con;
+        }
+
+        if (!dateVal || !empName) continue;
+        empName = String(empName).trim().toLowerCase();
+        const statusStr = String(statusVal || '').trim().toLowerCase();
+        const icoStr = String(icoVal || '').trim().toLowerCase();
+
+        const isPresent = statusStr.includes('hadir') || ['v', 'x', 't', 'tx'].includes(icoStr) || icoStr.includes('hadir');
+
+        if (isPresent) {
+          let month = -1;
+          let dateKey = '';
+          if (typeof dateVal === 'string') {
+            if (dateVal.includes('T')) { const d = new Date(dateVal); if (!isNaN(d)) { month = d.getMonth(); dateKey = dateVal.split('T')[0]; } }
+            else if (dateVal.includes('-')) { const parts = dateVal.split('-'); if(parts[0].length === 4) { month = parseInt(parts[1]) - 1; dateKey = dateVal.substring(0, 10); } else if (parts[2] && parts[2].length === 4) { month = parseInt(parts[1]) - 1; dateKey = `${parts[2]}-${parts[1]}-${parts[0]}`; } }
+            else if (dateVal.includes('/')) { const d = new Date(dateVal); if (!isNaN(d)) { month = d.getMonth(); dateKey = d.toISOString().split('T')[0]; } }
+            else { const d = new Date(dateVal); if (!isNaN(d)) { month = d.getMonth(); dateKey = d.toISOString().split('T')[0]; } }
+          } else if (dateVal instanceof Date) { month = dateVal.getMonth(); dateKey = dateVal.toISOString().split('T')[0]; }
+          
+          if (month >= 0 && month <= 11) {
+            managers.forEach(m => {
+              if (empName.includes(m.id.toLowerCase()) || m.id.toLowerCase().includes(empName)) {
+                if (!m._trackedDates[month].has(dateKey)) {
+                    m._trackedDates[month].add(dateKey); m.attendanceMap[month]++;
+                    m._trackedDates['all'].add(dateKey); m.attendanceMap['all'] = m._trackedDates['all'].size;
+                }
+              }
+            });
+          }
+        }
+      }
+    }
+  } catch (err) { console.error("Absensi Fetch Error:", err); }
+  
+  updateAttendanceByPeriod();
+  renderDashboard();
+  updateSummary();
+}
+
+function updateAttendanceByPeriod() {
+  managers.forEach(m => {
+    if (m.attendanceMap && m.attendanceMap[currentPeriod] !== undefined) {
+      m.attendance = m.attendanceMap[currentPeriod];
+    } else m.attendance = 0;
+  });
+}
+
+function calculateManagerScore(m, targetDays) {
+  let attScore = 0;
+  let goalsScore = 0;
+  const actualDays = currentPeriod === 'all' ? m.attendanceMap['all'] : (m.attendanceMap[currentPeriod] || 0);
+  
+  if (m.id === 'Fedrik' || m.id.toLowerCase().includes('manager')) {
+    attScore = 0;
+  } else {
+    const attPct = targetDays > 0 ? Math.min(100, (actualDays / targetDays) * 100) : 100;
+    attScore = (attPct / 100) * 2.0; 
+  }
+
+  const numGoals = m.goals.length;
+  const maxGoalScore = (m.id === 'Fedrik' || m.id.toLowerCase().includes('manager')) ? 10.0 : 8.0; 
+
+  if (currentPeriod === 'all') {
+    const scorePerGoalPerMonth = (maxGoalScore / numGoals) / 12;
+    for (let month = 0; month < 12; month++) {
+      m.goals.forEach(g => {
+        let status = achievementData[month]?.[g.id]?.status;
+        if (!status && g.limitBulanan !== undefined) {
+          const actual = achievementData[month]?.[g.id]?.actual;
+          if (actual !== null && actual !== undefined) {
+            if (g.operator === '>=' && actual >= g.limitBulanan) status = 'tercapai';
+            if (g.operator === '<=' && actual <= g.limitBulanan) status = 'tercapai';
+          }
+        }
+        if (status === 'tercapai') goalsScore += scorePerGoalPerMonth;
+      });
+    }
+  } else {
+    const scorePerGoal = maxGoalScore / numGoals;
+    m.goals.forEach(g => {
+      let status = achievementData[currentPeriod]?.[g.id]?.status;
+      if (!status && g.limitBulanan !== undefined) {
+        const actual = achievementData[currentPeriod]?.[g.id]?.actual;
+        if (actual !== null && actual !== undefined) {
+          if (g.operator === '>=' && actual >= g.limitBulanan) status = 'tercapai';
+          if (g.operator === '<=' && actual <= g.limitBulanan) status = 'tercapai';
+        }
+      }
+      if (status === 'tercapai') goalsScore += scorePerGoal;
+    });
+  }
+
+  const totalScore = attScore + goalsScore;
+  return { attScore: attScore.toFixed(2), goalsScore: goalsScore.toFixed(2), total: totalScore.toFixed(2) };
+}
+
+function getAggregatedActual(goalId) {
+  let sum = 0, hasData = false;
+  for(let i=0; i<12; i++) {
+    const v = achievementData[i]?.[goalId]?.actual;
+    if(v !== undefined && v !== null) { sum += v; hasData = true; }
+  }
+  return hasData ? sum : null;
+}
+
+function getGoalStatusForDisplay(g) {
+  const manual = achievementData[currentPeriod]?.[g.id]?.status;
+  if(manual) return manual; 
+  
+  if (currentPeriod === 'all' && g.limitBulanan !== undefined) {
+    const totalActual = getAggregatedActual(g.id);
+    if (totalActual !== null) {
+      const compareTarget = g.limitBulanan * 12;
+      if (g.operator === '>=') return totalActual >= compareTarget ? 'tercapai' : 'tidak_tercapai';
+      if (g.operator === '<=' && totalActual <= compareTarget) return 'tercapai';
+      return 'tidak_tercapai';
+    }
+  }
+  return '';
+}
+
+function filterType(type, btn) {
+  activeTypeFilter = type;
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderDashboard();
+}
+
+function updateSummary() {
+  let totalGoals = 0, achievedGoals = 0, missedGoals = 0, pendingGoals = 0, totalAttendance = 0;
+  const targetHadir = getWorkingDays(2026, currentPeriod);
+
+  managers.forEach(m => {
+    totalAttendance += (parseFloat(m.attendance) || 0);
+    m.goals.forEach(g => {
+      const s = getGoalStatusForDisplay(g);
+      totalGoals++;
+      if (s === 'tercapai') achievedGoals++;
+      else if (s === 'tidak_tercapai') missedGoals++;
+      else pendingGoals++;
+    });
+
+    totalGoals++;
+    if (m.attendance >= targetHadir) achievedGoals++;
+    else missedGoals++;
+  });
+
+  const pct = totalGoals > 0 ? Math.round((achievedGoals / totalGoals) * 100) : 0;
+  
+  document.getElementById('total-targets').textContent = totalGoals;
+  document.getElementById('achieved-count').textContent = achievedGoals;
+  document.getElementById('missed-count').textContent = missedGoals;
+  document.getElementById('achievement-rate').textContent = `${pct}% dari total target`;
+  
+  let avg = totalAttendance / managers.length;
+  document.getElementById('avg-attendance').textContent = avg.toFixed(1);
+  
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('lbl-tercapai').textContent = achievedGoals;
+  document.getElementById('lbl-meleset').textContent = missedGoals;
+  document.getElementById('lbl-pending').textContent = pendingGoals;
+}
+
+function updateState(id, type, value, managerId = null) {
+  if (!achievementData[currentPeriod]) achievementData[currentPeriod] = {};
+  if (!achievementData[currentPeriod][id]) achievementData[currentPeriod][id] = {};
+  
+  let actualToSave = achievementData[currentPeriod][id].actual;
+
+  if (type === 'status') {
+    achievementData[currentPeriod][id].status = value;
+    if (value !== 'tidak_tercapai') {
+      achievementData[currentPeriod][id].notes = '';
+      const textarea = document.getElementById(`pica-${id}`);
+      if (textarea) textarea.value = '';
+    }
+  } else if (type === 'notes') {
+    achievementData[currentPeriod][id].notes = value;
+  }
+
+  if(!managerId && id.startsWith('att_')) managerId = id.replace('att_', '');
+  else if (!managerId) {
+    managers.forEach(m => { m.goals.forEach(g => { if(g.id === id) managerId = m.id; }); });
+  }
+
+  const payload = {
+    action: 'saveRealisasi', bulan: currentPeriod, pengelolaId: managerId,
+    goalId: id, actual: actualToSave || null,
+    status: achievementData[currentPeriod][id].status || '', notes: achievementData[currentPeriod][id].notes || ''
+  };
+
+  saveToCloud(payload);
+  updateSummary();
+}
+
+window.saveActualValue = function(id, fmtVal, targetVal, operator) {
+  let rawStr = fmtVal.replace(/[^0-9]/g, '');
+  if (!achievementData[currentPeriod]) achievementData[currentPeriod] = {};
+  if (!achievementData[currentPeriod][id]) achievementData[currentPeriod][id] = {};
+  
+  let valToSave = null;
+  let newStatus = '';
+
+  if (rawStr === '') {
+    achievementData[currentPeriod][id].actual = null;
+    achievementData[currentPeriod][id].status = '';
+  } else {
+    valToSave = parseInt(rawStr);
+    achievementData[currentPeriod][id].actual = valToSave;
+    
+    if (operator === '>=') newStatus = valToSave >= targetVal ? 'tercapai' : 'tidak_tercapai';
+    if (operator === '<=') newStatus = valToSave <= targetVal ? 'tercapai' : 'tidak_tercapai';
+    
+    achievementData[currentPeriod][id].status = newStatus;
+    if (newStatus === 'tercapai') achievementData[currentPeriod][id].notes = '';
+  }
+
+  let managerId = null;
+  managers.forEach(m => { m.goals.forEach(g => { if(g.id === id) managerId = m.id; }); });
+
+  const payload = {
+    action: 'saveRealisasi', bulan: currentPeriod, pengelolaId: managerId,
+    goalId: id, actual: valToSave, status: newStatus,
+    notes: achievementData[currentPeriod][id].notes || ''
+  };
+
+  saveToCloud(payload);
+  renderDashboard(); 
+  updateSummary();
+};
+
+function renderDashboard() {
+  const container = document.getElementById('manager-container');
+  if (!container) return;
+
+  const periodLabel = currentPeriod === 'all' ? 'Sepanjang 2026' : MONTH_NAMES[parseInt(currentPeriod)];
+  document.getElementById('period-desc').innerHTML = `Periode: <strong>${periodLabel}</strong>`;
+
+  let html = '';
+
+  managers.forEach((m, mIdx) => {
+    let attVal = parseFloat(m.attendance) || 0;
+    
+    let targetHadir = getWorkingDays(2026, currentPeriod);
+    let warnHadir = targetHadir - (currentPeriod === 'all' ? 12 : 2);
+    
+    let attClass = attVal >= targetHadir ? 'good' : (attVal >= warnHadir ? 'warn' : 'bad');
+    let attIcon = attClass === 'good' ? 'fa-check' : (attClass === 'warn' ? 'fa-clock' : 'fa-triangle-exclamation');
+
+    let mAchieved = 0;
+    m.goals.forEach(g => { if(getGoalStatusForDisplay(g) === 'tercapai') mAchieved++; });
+    
+    const isAttAchieved = attVal >= targetHadir;
+    if (isAttAchieved) mAchieved++;
+
+    const totalItems = m.goals.length + 1; 
+    const mProgress = Math.round((mAchieved / totalItems) * 100) || 0;
+    const mProgressColor = mProgress >= 70 ? 'var(--green-500)' : (mProgress >= 40 ? 'var(--amber-500)' : 'var(--red-400)');
+
+    const filteredGoals = activeTypeFilter === 'all' ? m.goals : m.goals.filter(g => g.type === activeTypeFilter);
+    const showAttendancePica = activeTypeFilter === 'all' || activeTypeFilter === 'Operasional';
+
+    if (filteredGoals.length === 0 && !showAttendancePica) return;
+
+    const scores = calculateManagerScore(m, targetHadir);
+    let attScoreText = (m.id === 'Fedrik' || m.id.toLowerCase().includes('manager')) ? '-' : scores.attScore;
+
+    html += `
+    <div class="manager-card">
+      <div class="manager-header">
+        <div class="manager-identity">
+          <div class="manager-avatar ${AVATAR_COLORS[mIdx % 6]}">${m.name.charAt(0)}</div>
+          <div>
+            <div class="manager-name">${m.name}</div>
+            <div class="manager-role">${m.role}</div>
+          </div>
+          <!-- Tombol Cetak PDF Individu -->
+          <button onclick="exportManagerPDF('${m.id}')" class="btn btn-danger !py-1 !px-3 !text-[11px] ml-2 no-print">
+            <i class="fa-solid fa-file-pdf"></i> Cetak Job Goal
+          </button>
+        </div>
+        
+        <div class="manager-stats">
+          <div class="mini-progress" data-tip="Target periode ini tercapai ${mAchieved} dari ${totalItems}">
+            <div class="mini-track">
+              <div class="mini-fill" style="width:${mProgress}%;background:${mProgressColor};"></div>
+            </div>
+            <span class="mini-label" style="color:${mProgressColor};">${mProgress}%</span>
+          </div>
+          <div class="stat-pill ${attClass}">
+            <i class="fa-solid ${attIcon}" style="font-size:11px;"></i>
+            ${attVal} hari hadir
+          </div>
+        </div>
+
+        <div class="manager-score-wrap" title="Akumulasi Nilai Kinerja (Kehadiran & Capaian Target)">
+           <div class="manager-score-details">
+             <div class="manager-score-label">Skor Kinerja</div>
+             <div class="manager-score-sub">Hadir: <span style="color:var(--green-600)">${attScoreText}</span> | Kinerja: <span style="color:var(--blue-600)">${scores.goalsScore}</span></div>
+           </div>
+           <div class="manager-score-badge">
+             ${scores.total}
+           </div>
+        </div>
+      </div>
+      
+      <div class="goals-container">
+        <table class="goals-table">
+          <thead>
+            <tr>
+              <th class="col-goal">Fokus Kinerja</th>
+              <th class="col-data">Data Pencapaian</th>
+              <th class="col-status">Status</th>
+              <th class="col-pica">PICA & Solusi</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredGoals.map(g => {
+              const status = getGoalStatusForDisplay(g);
+              const notes = achievementData[currentPeriod]?.[g.id]?.notes || '';
+              const rowClass = status === 'tercapai' ? 'row-achieved' : (status === 'tidak_tercapai' ? 'row-missed' : '');
+              const badgeClass = g.type === 'Pendapatan' ? 'type-pendapatan' : (g.type === 'Penghematan' ? 'type-penghematan' : 'type-operasional');
+              const targetTeks = (currentPeriod !== 'all' && g.limitBulanan !== undefined) ? formatRp(g.limitBulanan) : g.target;
+
+              let dataCell = '';
+              if (g.limitBulanan !== undefined) {
+                if (currentPeriod === 'all') {
+                  const agg = getAggregatedActual(g.id);
+                  const isOver = agg !== null;
+                  const pct = agg !== null && (g.limitBulanan * 12) > 0 ? Math.min(Math.round((agg / (g.limitBulanan * 12)) * 100), 200) : 0;
+                  const barColor = status === 'tercapai' ? 'var(--green-500)' : (status === 'tidak_tercapai' ? 'var(--red-400)' : 'var(--slate-300)');
+                  
+                  dataCell = `
+                    <div class="target-label">Target Tahunan</div>
+                    <div class="target-val">${targetTeks}</div>
+                    <div class="actual-label">Total Aktual</div>
+                    <div class="actual-value">${agg !== null ? formatRp(agg) : '<span class="actual-empty">Belum ada data</span>'}</div>
+                    ${isOver ? `<div style="margin-top:8px;"><div style="height:4px;background:var(--slate-100);border-radius:99px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${barColor};border-radius:99px;transition:width .5s;"></div></div><div style="font-size:10px;font-weight:600;color:var(--slate-400);margin-top:3px;">${pct}% dari target</div></div>` : ''}
+                  `;
+                } else {
+                  const savedVal = achievementData[currentPeriod]?.[g.id]?.actual;
+                  const savedFmt = savedVal ? savedVal.toLocaleString('id-ID') : '';
+                  dataCell = `
+                    <div class="target-label">Target Bulan Ini</div>
+                    <div class="target-val">${targetTeks}</div>
+                    <div class="actual-label">Input Realisasi</div>
+                    <div class="input-rp">
+                      <span class="input-rp-prefix">Rp</span>
+                      <input type="text" value="${savedFmt}" placeholder="0"
+                        oninput="formatRupiahInput(this)"
+                        onblur="saveActualValue('${g.id}',this.value,${g.limitBulanan},'${g.operator}')">
+                    </div>
+                  `;
+                }
+              } else {
+                dataCell = `
+                  <div class="target-label">${currentPeriod === 'all' ? 'Target' : 'Target Bulan Ini'}</div>
+                  <div class="target-val" style="font-family:var(--font-main);font-size:12px;">${g.target}</div>
+                  <div style="margin-top:8px;"><span style="font-size:11px;color:var(--slate-400);font-style:italic;">Diukur Manual</span></div>
+                `;
+              }
+
+              const selectClass = status === 'tercapai' ? 'achieved' : (status === 'tidak_tercapai' ? 'missed' : '');
+              const isDisabled = status !== 'tidak_tercapai';
+
+              return `
+              <tr class="${rowClass}">
+                <td class="col-goal">
+                  <span class="type-badge ${badgeClass}">${g.type}</span>
+                  <div class="goal-desc">${g.desc}</div>
+                </td>
+                <td class="col-data">${dataCell}</td>
+                <td class="col-status">
+                  <div class="status-select-wrap">
+                    <select class="status-select ${selectClass}" onchange="updateState('${g.id}', 'status', this.value, '${m.id}'); renderDashboard();">
+                      <option value="">Pilih Status</option>
+                      <option value="tercapai" ${status === 'tercapai' ? 'selected' : ''}>✅ Tercapai</option>
+                      <option value="tidak_tercapai" ${status === 'tidak_tercapai' ? 'selected' : ''}>❌ Meleset</option>
+                    </select>
+                  </div>
+                </td>
+                <td class="col-pica">
+                  <textarea id="pica-${g.id}" class="pica-area ${!isDisabled ? 'active' : ''}" 
+                    placeholder="${isDisabled ? '— Isi PICA jika target meleset —' : 'Tulis analisa PICA di sini...'}" 
+                    onblur="updateState('${g.id}', 'notes', this.value, '${m.id}')"
+                    ${isDisabled ? 'disabled' : ''}>${notes}</textarea>
+                </td>
+              </tr>
+              `;
+            }).join('')}
+            
+            ${showAttendancePica ? `
+              <tr class="${isAttAchieved ? 'row-achieved' : 'row-missed'}">
+                <td class="col-goal">
+                  <span class="type-badge type-operasional">Kehadiran</span>
+                  <div class="goal-desc">Evaluasi Hari Kerja Efektif. ${m.id === 'Fedrik' || m.id.toLowerCase().includes('manager') ? '<br><span style="font-size:11px;color:var(--slate-500);">(Hanya evaluasi, tidak mengurangi nilai skor akhir)</span>' : ''}</div>
+                </td>
+                <td class="col-data">
+                  <div class="target-label">Target Sesuai Kalender</div>
+                  <div class="target-val">${targetHadir} Hari</div>
+                  <div class="actual-label">Total Hadir Riil</div>
+                  <div class="actual-value" style="color:${isAttAchieved ? 'var(--green-600)' : 'var(--red-600)'}">${attVal} Hari</div>
+                </td>
+                <td class="col-status">
+                  <div class="status-select-wrap" style="padding:7px 10px; font-weight:700; font-size:12px; text-align:center; background:${isAttAchieved ? 'var(--green-50)' : 'var(--red-50)'}; color:${isAttAchieved ? 'var(--green-700)' : 'var(--red-700)'}; border: 1.5px solid ${isAttAchieved ? 'var(--green-400)' : 'var(--red-400)'}; border-radius:var(--radius-md);">
+                    ${isAttAchieved ? '✅ Memenuhi' : '❌ Kurang'}
+                  </div>
+                </td>
+                <td class="col-pica">
+                  <textarea id="pica-att_${m.id}" class="pica-area ${!isAttAchieved ? 'active' : ''}" 
+                    placeholder="${isAttAchieved ? '— Kehadiran Terpenuhi —' : 'Tulis alasan Izin/Sakit/Cuti/Dinas di sini...'}" 
+                    onblur="updateState('att_${m.id}', 'notes', this.value, '${m.id}')">${achievementData[currentPeriod]?.[`att_${m.id}`]?.notes || ''}</textarea>
+                </td>
+              </tr>
+            ` : ''}
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    `;
+  });
+
+  container.innerHTML = html || '<p style="color:var(--slate-400);text-align:center;padding:40px;">Tidak ada target untuk kategori ini.</p>';
+}
+
+// LOGIKA PEMBUATAN PDF INDIVIDU (FORM JOB GOAL)
+async function getBase64ImageFromUrl(imageUrl) {
+  try {
+    const res = await fetch(imageUrl);
+    const blob = await res.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => resolve(reader.result), false);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    return null;
+  }
+}
+
+window.exportManagerPDF = async function(managerId) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const m = managers.find(x => x.id === managerId);
+  if(!m) return;
+
+  // Header & Logo
+  if (!logoBase64Cache) {
+    logoBase64Cache = await getBase64ImageFromUrl('https://i.ibb.co.com/WvTwLMn5/image-1.png');
+  }
+  if (logoBase64Cache) {
+    doc.addImage(logoBase64Cache, 'PNG', 14, 10, 24, 24);
+  }
+  
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("KOPERASI KARYAWAN", 42, 15);
+  doc.text("ADARO KARYA MANDIRI", 42, 21);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.text("Badan Hukum Nomor: 2128/BH/IX Tanggal 31 Juli 1995", 42, 26);
+  doc.setFontSize(8);
+  doc.text("Office: Jl. Jend. A. Yani Komp. Swadharma Jalur II Blok Mawar RT IV", 42, 30);
+  doc.text("Kel. Mabuun Kec. Murung Pudak Kab. Tabalong Prov. Kalimantan Selatan", 42, 34);
+  doc.text("Kode Pos 71571 Telp/Fax: 0526-2023593 email: kopkar.adaro@gmail.com", 42, 38);
+  
+  doc.setLineWidth(0.5);
+  doc.line(14, 42, 196, 42);
+
+  // Judul Laporan
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text(`JOB GOAL & EVALUASI KINERJA - ${m.role.toUpperCase()}`, 105, 50, { align: "center" });
+
+  // Tabel Identitas Karyawan
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "bold");
+  doc.text("EMPLOYEE IDENTITY", 14, 60);
+  doc.setFont("helvetica", "normal");
+  
+  const startY = 65;
+  const lh = 5;
+  doc.text(`Name`, 14, startY); doc.text(`: ${m.name}`, 40, startY);
+  doc.text(`NIK`, 14, startY+lh*1); doc.text(`: -`, 40, startY+lh*1);
+  doc.text(`Position`, 14, startY+lh*2); doc.text(`: ${m.role}`, 40, startY+lh*2);
+  doc.text(`Dept./Divisi`, 14, startY+lh*3); doc.text(`: Koperasi AKM`, 40, startY+lh*3);
+  doc.text(`Company`, 14, startY+lh*4); doc.text(`: Koperasi Karyawan Adaro Karya Mandiri`, 40, startY+lh*4);
+  doc.text(`Period`, 14, startY+lh*5); doc.text(`: Tahun 2026 (${currentPeriod === 'all' ? 'Tahunan' : MONTH_NAMES[parseInt(currentPeriod)]})`, 40, startY+lh*5);
+
+  // Tabel Job Goals
+  const tableColumn = ["No", "Fokus Kinerja (Job Goal)", "Target", "Capaian", "Status", "PICA"];
+  const tableRows = [];
+  
+  m.goals.forEach((g, idx) => {
+    const status = getGoalStatusForDisplay(g);
+    const notes = achievementData[currentPeriod]?.[g.id]?.notes || '-';
+    let actualText = '-';
+    
+    if (g.limitBulanan !== undefined) {
+       if (currentPeriod === 'all') {
+           const agg = getAggregatedActual(g.id);
+           actualText = agg !== null ? formatRp(agg) : '-';
+       } else {
+           const actual = achievementData[currentPeriod]?.[g.id]?.actual;
+           actualText = (actual !== null && actual !== undefined) ? formatRp(actual) : '-';
+       }
+    } else {
+       actualText = 'Manual';
+    }
+
+    let statusText = status === 'tercapai' ? 'Memenuhi' : (status === 'tidak_tercapai' ? 'Meleset' : 'Pending');
+    let targetText = currentPeriod === 'all' ? (g.limitBulanan ? formatRp(g.limitBulanan*12) : g.target) : (g.limitBulanan ? formatRp(g.limitBulanan) : g.target);
+    
+    tableRows.push([(idx+1).toString(), g.desc, targetText, actualText, statusText, notes]);
+  });
+
+  const targetHadir = getWorkingDays(2026, currentPeriod);
+  const attVal = parseFloat(m.attendance) || 0;
+  const isAttAchieved = attVal >= targetHadir;
+  const attNotes = achievementData[currentPeriod]?.[`att_${m.id}`]?.notes || '-';
+  
+  tableRows.push(["*", "Kehadiran Efektif", `${targetHadir} Hari`, `${attVal} Hari`, isAttAchieved ? 'Memenuhi' : 'Kurang', attNotes]);
+
+  doc.autoTable({
+    startY: 96,
+    head: [tableColumn],
+    body: tableRows,
+    theme: 'grid',
+    styles: { fontSize: 8, cellPadding: 3 },
+    headStyles: { fillColor: [22, 163, 74] }, // Hijau Adaro
+    columnStyles: {
+        0: { cellWidth: 8 },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 'auto' }
+    }
+  });
+
+  // Tanda Tangan
+  let finalY = doc.lastAutoTable.finalY + 15;
+  if (finalY > 250) { doc.addPage(); finalY = 30; }
+
+  doc.setFontSize(9);
+  doc.text("Disiapkan Oleh,", 40, finalY, { align: "center" });
+  doc.text("Diketahui Oleh,", 160, finalY, { align: "center" });
+
+  doc.setFont("helvetica", "bold");
+  doc.text(`( ${m.name} )`, 40, finalY + 25, { align: "center" });
+  doc.text(`( Fedrik )`, 160, finalY + 25, { align: "center" }); // Anda dapat mengubah nama Manager jika diperlukan
+  
+  doc.setFont("helvetica", "normal");
+  doc.text(m.role, 40, finalY + 29, { align: "center" });
+  doc.text("Manager Koperasi", 160, finalY + 29, { align: "center" });
+  
+  doc.save(`Job_Goal_${m.id}_${currentPeriod === 'all' ? '2026' : MONTH_NAMES[parseInt(currentPeriod)]}.pdf`);
+};
+
+window.exportCSV = function() {
+  let rows = [['Nama Pengelola', 'Jabatan', 'Skor Kinerja', 'Tipe Target', 'Deskripsi Kinerja', 'Target', 'Status', 'Catatan PICA']];
+  const targetHadir = getWorkingDays(2026, currentPeriod);
+
+  managers.forEach(m => {
+    const scores = calculateManagerScore(m, targetHadir);
+    m.goals.forEach(g => {
+      const s = getGoalStatusForDisplay(g);
+      const notes = achievementData[currentPeriod]?.[g.id]?.notes || '';
+      rows.push([m.name, m.role, scores.total, g.type, g.desc, g.target, s || 'Belum dinilai', notes]);
+    });
+    
+    const attNotes = achievementData[currentPeriod]?.[`att_${m.id}`]?.notes || '';
+    const attStatus = m.attendance >= targetHadir ? '✅ Memenuhi' : '❌ Kurang';
+    rows.push([m.name, m.role, scores.total, 'Operasional', 'Evaluasi Kehadiran Efektif', `${targetHadir} Hari`, attStatus, attNotes]);
+  });
+  
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); 
+  a.href = url;
+  
+  const period = currentPeriod === 'all' ? '2026' : MONTH_NAMES[parseInt(currentPeriod)];
+  a.download = `Evaluasi_Kinerja_Kopkar_${period}.csv`;
+  a.click(); 
+  URL.revokeObjectURL(url);
+};
+
+function switchMonth(val) {
+  currentPeriod = val;
+  updateAttendanceByPeriod();
+  renderDashboard();
+  updateSummary();
+}
+
+async function init() {
+  resetAttendanceMaps();
+  await fetchCloudData(); 
+  await fetchAttendanceData(); 
+}
+
+window.onload = init;
+</script>
+</body>
+</html>
