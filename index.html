@@ -412,7 +412,6 @@
 
 <nav class="topbar">
   <div class="topbar-brand">
-    <!-- Mengganti Logo Inisial dengan Logo Resmi -->
     <img src="https://i.ibb.co.com/WvTwLMn5/image-1.png" alt="Logo Kopkar AKM" class="topbar-logo">
     <div>
       <div class="topbar-title">Monitoring Kinerja</div>
@@ -421,7 +420,7 @@
   </div>
   <div class="topbar-right no-print">
     <span id="sync-status" class="sync-badge">
-      <i class="fa-solid fa-spinner spin" style="font-size:11px;"></i> Memuat data cloud
+      <i class="fa-solid fa-spinner spin" style="font-size:11px;"></i> Memuat data...
     </span>
     <select id="month-filter" class="ctrl-select" onchange="switchMonth(this.value)">
       <option value="all">Sepanjang 2026</option>
@@ -530,10 +529,9 @@
 </main>
 
 <script>
-const BACKEND_DB_URL = "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT";
-const ABSENSI_GAS_URL = "https://script.google.com/macros/s/AKfycbxKDDzidmpfR-1Q-Ymiq8hfTo5l1vheH4w2NUktZEmBCfbF7AtLZr3IhEZPoF29hHoC3A/exec";
+const BACKEND_DB_URL = "https://script.google.com/macros/s/AKfycbxKDDzidmpfR-1Q-Ymiq8hfTo5l1vheH4w2NUktZEmBCfbF7AtLZr3IhEZPoF29hHoC3A/exec";
+const ABSENSI_GAS_URL = "https://script.google.com/macros/s/AKfycbz6YajqskEFxko5jVtpK8RS3oI-LUHbaLCUmgCFa-xHZIWSGrxJfB66ng0O0HqR4Arf-g/exec";
 
-// Menyimpan Cache Gambar Logo (agar PDF Generation Lulus Uji CORS)
 let logoBase64Cache = null;
 
 function formatRp(val) {
@@ -645,22 +643,14 @@ let activeTypeFilter = 'all';
 
 function resetAttendanceMaps() {
   managers.forEach(m => {
-    if(!m.attendanceMap) m.attendanceMap = { all: 0 };
+    m.attendanceMap = { all: 0 };
     for (let i = 0; i < 12; i++) m.attendanceMap[i] = 0;
-    if(!m._trackedDates) m._trackedDates = { all: new Set() };
+    m._trackedDates = { all: new Set() };
     for (let i = 0; i < 12; i++) m._trackedDates[i] = new Set();
   });
 }
 
 async function fetchCloudData() {
-  if(BACKEND_DB_URL === "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT") {
-    loadLocalStorageData();
-    renderDashboard();
-    updateSummary();
-    return;
-  }
-
-  const el = document.getElementById('sync-status');
   try {
     const res = await fetch(BACKEND_DB_URL);
     if(!res.ok) throw new Error('DB Fetch error');
@@ -668,38 +658,35 @@ async function fetchCloudData() {
     const json = await res.json();
     if(json.status === 'success') {
       if(json.targets && json.targets.length > 0) {
-        const managersMap = {};
+        
+        // Membersihkan Target yang ada agar tidak duplikat
+        managers.forEach(m => m.goals = []);
+        
         json.targets.forEach(t => {
-          if(!managersMap[t.pengelolaId]) {
-            managersMap[t.pengelolaId] = {
+          let m = managers.find(x => x.id === t.pengelolaId);
+          if(!m) {
+            m = {
               id: t.pengelolaId, name: t.nama, role: "Pengelola Koperasi",
               attendance: 0, attendanceMap: {all:0}, _trackedDates: {all: new Set()}, goals: []
             };
-            for (let i = 0; i < 12; i++) { managersMap[t.pengelolaId].attendanceMap[i] = 0; managersMap[t.pengelolaId]._trackedDates[i] = new Set(); }
+            for (let i = 0; i < 12; i++) { m.attendanceMap[i] = 0; m._trackedDates[i] = new Set(); }
+            managers.push(m);
           }
-          managersMap[t.pengelolaId].goals.push({
+          m.goals.push({
             id: t.goalId, type: t.type, target: t.targetTeks, desc: t.desc,
             limitBulanan: t.limit, operator: t.operator
           });
         });
-        managers = Object.values(managersMap);
       }
       
       achievementData = json.achievementData || {};
       if(!achievementData['all']) achievementData['all'] = {};
       for(let i=0; i<12; i++) { if(!achievementData[i]) achievementData[i] = {}; }
-
-      el.className = 'sync-badge success';
-      el.innerHTML = '<i class="fa-solid fa-cloud-arrow-down" style="font-size:10px;"></i> Data Cloud Terhubung';
-      setTimeout(() => el.style.display = 'none', 3500);
     }
   } catch (err) {
-    console.error("Gagal load DB", err);
+    console.error("Gagal load DB, menggunakan cache lokal", err);
     loadLocalStorageData(); 
   }
-  
-  renderDashboard();
-  updateSummary();
 }
 
 function loadLocalStorageData() {
@@ -715,14 +702,6 @@ async function saveToCloud(payloadData) {
   el.className = 'sync-badge saving';
   el.innerHTML = '<i class="fa-solid fa-spinner spin" style="font-size:10px;"></i> Menyimpan...';
   
-  if(BACKEND_DB_URL === "ISI_DENGAN_URL_GAS_DATABASE_YANG_BARU_ANDA_BUAT") {
-    localStorage.setItem('kopkar_pica_monthly', JSON.stringify(achievementData));
-    el.className = 'sync-badge success';
-    el.innerHTML = '<i class="fa-solid fa-check" style="font-size:10px;"></i> Tersimpan Lokal';
-    setTimeout(() => el.style.display = 'none', 2000);
-    return;
-  }
-
   try {
     const res = await fetch(BACKEND_DB_URL, {
       method: 'POST',
@@ -736,15 +715,16 @@ async function saveToCloud(payloadData) {
       el.innerHTML = '<i class="fa-solid fa-check" style="font-size:10px;"></i> Tersimpan di Cloud';
     } else throw new Error(json.message);
   } catch(e) {
+    localStorage.setItem('kopkar_pica_monthly', JSON.stringify(achievementData));
     el.className = 'sync-badge error';
-    el.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:10px;"></i> Gagal Simpan Cloud';
+    el.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="font-size:10px;"></i> Disimpan Lokal (Gagal Cloud)';
   }
   setTimeout(() => el.style.display = 'none', 3000);
 }
 
 async function fetchAttendanceData() {
   try {
-    const res = await fetch(ABSENSI_GAS_URL);
+    const res = await fetch(ABSENSI_GAS_URL, { redirect: "follow" });
     if(!res.ok) throw new Error('Fetch error');
     const json = await res.json();
     
@@ -786,7 +766,7 @@ async function fetchAttendanceData() {
         const statusStr = String(statusVal || '').trim().toLowerCase();
         const icoStr = String(icoVal || '').trim().toLowerCase();
 
-        const isPresent = statusStr.includes('hadir') || ['v', 'x', 't', 'tx'].includes(icoStr) || icoStr.includes('hadir');
+        const isPresent = statusStr.includes('hadir') || ['v', 'x', 't', 'tx'].includes(icoStr) || icoStr.includes('hadir') || ['v', 'x', 't', 'tx'].includes(statusStr);
 
         if (isPresent) {
           let month = -1;
@@ -810,12 +790,10 @@ async function fetchAttendanceData() {
           }
         }
       }
+    } else {
+        throw new Error("Data Absensi Kosong");
     }
-  } catch (err) { console.error("Absensi Fetch Error:", err); }
-  
-  updateAttendanceByPeriod();
-  renderDashboard();
-  updateSummary();
+  } catch (err) { console.error("Absensi Fetch Error:", err); throw err; }
 }
 
 function updateAttendanceByPeriod() {
@@ -1332,7 +1310,7 @@ window.exportManagerPDF = async function(managerId) {
 
   doc.setFont("helvetica", "bold");
   doc.text(`( ${m.name} )`, 40, finalY + 25, { align: "center" });
-  doc.text(`( Fedrik )`, 160, finalY + 25, { align: "center" }); // Anda dapat mengubah nama Manager jika diperlukan
+  doc.text(`( Fedrik )`, 160, finalY + 25, { align: "center" }); 
   
   doc.setFont("helvetica", "normal");
   doc.text(m.role, 40, finalY + 29, { align: "center" });
@@ -1379,8 +1357,31 @@ function switchMonth(val) {
 
 async function init() {
   resetAttendanceMaps();
-  await fetchCloudData(); 
-  await fetchAttendanceData(); 
+  loadLocalStorageData();
+  
+  // Render awal dengan data cache agar user tidak menatap layar kosong
+  updateAttendanceByPeriod();
+  renderDashboard();
+  updateSummary();
+
+  const el = document.getElementById('sync-status');
+  el.className = 'sync-badge saving';
+  el.innerHTML = '<i class="fa-solid fa-spinner spin" style="font-size:10px;"></i> Menarik data...';
+
+  // Eksekusi secara Paralel!
+  let dbPromise = fetchCloudData();
+  let absenPromise = fetchAttendanceData();
+
+  try {
+      await Promise.all([dbPromise, absenPromise]);
+  } catch (error) {
+      console.error("Gagal sinkronisasi salah satu layanan:", error);
+  } finally {
+      // Pastikan UI diupdate ulang setelah data baru masuk semua
+      updateAttendanceByPeriod();
+      renderDashboard();
+      updateSummary();
+  }
 }
 
 window.onload = init;
